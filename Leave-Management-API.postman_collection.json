@@ -1,0 +1,259 @@
+{
+  "info": {
+    "_postman_id": "leave-management-api",
+    "name": "Leave Management System API",
+    "description": "API untuk Sistem Manajemen Cuti Karyawan",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"John Doe\", \"email\": \"john@example.com\", \"password\": \"password123\", \"password_confirmation\": \"password123\", \"role\": \"employee\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"employee1@example.com\", \"password\": \"password\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leave Requests",
+      "item": [
+        {
+          "name": "Get All Leave Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/leave-requests",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leave-requests"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "disabled": true
+                },
+                {
+                  "key": "user_id",
+                  "value": "2",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Leave Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "start_date",
+                  "value": "2026-05-01",
+                  "type": "text"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-05-05",
+                  "type": "text"
+                },
+                {
+                  "key": "reason",
+                  "value": "Liburan keluarga ke Bali",
+                  "type": "text"
+                },
+                {
+                  "key": "attachment",
+                  "type": "file",
+                  "src": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/leave-requests",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leave-requests"]
+            }
+          }
+        },
+        {
+          "name": "Get Specific Leave Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/leave-requests/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leave-requests", "1"]
+            }
+          }
+        },
+        {
+          "name": "Approve Leave Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"notes\": \"Disetujui. Selamat berlibur!\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/leave-requests/1/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leave-requests", "1", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Reject Leave Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"reason\": \"Maaf, saat ini tidak ada penolong yang tersedia\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/leave-requests/1/reject",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leave-requests", "1", "reject"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leave Balance",
+      "item": [
+        {
+          "name": "Get Leave Balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/leave-balance?year=2026",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leave-balance"],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2026"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
