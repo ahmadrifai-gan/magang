@@ -25,9 +25,30 @@ class LeaveBalance extends Model
         'remaining_quota' => 'integer',
     ];
 
+    protected $appends = [
+        'total_days',
+        'used_days',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Accessor untuk backward compatibility
+     */
+    public function getTotalDaysAttribute(): int
+    {
+        return $this->total_quota;
+    }
+
+    /**
+     * Accessor untuk backward compatibility
+     */
+    public function getUsedDaysAttribute(): int
+    {
+        return $this->used_quota;
     }
 
     /**

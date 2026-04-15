@@ -237,70 +237,16 @@
 </div>
 
 <!-- Action Scripts -->
+<script src="{{ asset('js/api-client.js') }}"></script>
 <script>
     function approveRequest(requestId) {
-        const notes = document.getElementById('approveNotes' + requestId).value;
-        
-        showLoading();
-        
-        fetch(`/api/leave-requests/${requestId}/approve`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('api_token')}`,
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ notes })
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Failed to approve');
-            return response.json();
-        })
-        .then(data => {
-            hideLoading();
-            showToast('✅ Pengajuan berhasil disetujui', 'success');
-            setTimeout(() => location.reload(), 1000);
-        })
-        .catch(error => {
-            hideLoading();
-            console.error(error);
-            showToast('❌ Gagal menyetujui pengajuan', 'error');
-        });
+        const notes = document.getElementById('approveNotes' + requestId)?.value || '';
+        approveLeaveRequest(requestId, notes);
     }
 
     function rejectRequest(requestId) {
-        const reason = document.getElementById('rejectReason' + requestId).value;
-        
-        if (!reason.trim()) {
-            showToast('⚠️ Alasan penolakan harus diisi', 'warning');
-            return;
-        }
-        
-        showLoading();
-        
-        fetch(`/api/leave-requests/${requestId}/reject`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('api_token')}`,
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ reason })
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Failed to reject');
-            return response.json();
-        })
-        .then(data => {
-            hideLoading();
-            showToast('✅ Pengajuan berhasil ditolak', 'success');
-            setTimeout(() => location.reload(), 1000);
-        })
-        .catch(error => {
-            hideLoading();
-            console.error(error);
-            showToast('❌ Gagal menolak pengajuan', 'error');
-        });
+        const reason = document.getElementById('rejectReason' + requestId)?.value || '';
+        rejectLeaveRequest(requestId, reason);
     }
 </script>
 

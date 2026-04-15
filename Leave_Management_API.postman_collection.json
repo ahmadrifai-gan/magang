@@ -1,0 +1,346 @@
+{
+  "info": {
+    "name": "Leave Management System API",
+    "description": "Complete API testing collection untuk Leave Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "EMPLOYEE_TOKEN",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ADMIN_TOKEN",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "REQUEST_ID",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "Register - Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Budi Santoso\",\n  \"email\": \"budi@example.com\",\n  \"password\": \"Password123\",\n  \"password_confirmation\": \"Password123\",\n  \"role\": \"employee\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/register",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register user baru dengan role employee"
+          }
+        },
+        {
+          "name": "Register - Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Admin System\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"AdminPass123\",\n  \"password_confirmation\": \"AdminPass123\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/register",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register user baru dengan role admin"
+          }
+        },
+        {
+          "name": "Login - Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"budi@example.com\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/login",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login sebagai employee dan dapatkan token"
+          }
+        },
+        {
+          "name": "Login - Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"AdminPass123\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/login",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login sebagai admin dan dapatkan token"
+          }
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{EMPLOYEE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/me",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "me"]
+            },
+            "description": "Dapatkan profil user yang sedang login"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{EMPLOYEE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/logout",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Logout dan invalidate token"
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Employee Operations",
+      "item": [
+        {
+          "name": "Get Leave Balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{EMPLOYEE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/leave-balance",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "leave-balance"],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2024",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Dapatkan saldo cuti employee untuk tahun ini"
+          }
+        },
+        {
+          "name": "Submit Leave Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{EMPLOYEE_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start_date\": \"2024-02-20\",\n  \"end_date\": \"2024-02-23\",\n  \"reason\": \"Liburan ke Bali bersama keluarga\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/leave-requests",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "leave-requests"]
+            },
+            "description": "Ajukan cuti baru"
+          }
+        },
+        {
+          "name": "Get My Leave Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{EMPLOYEE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/leave-requests",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "leave-requests"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Lihat semua pengajuan cuti milik employee"
+          }
+        },
+        {
+          "name": "Get Specific Request Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{EMPLOYEE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/leave-requests/{{REQUEST_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "leave-requests", "{{REQUEST_ID}}"]
+            },
+            "description": "Lihat detail dan status pengajuan cuti spesifik"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛡️ Admin Operations",
+      "item": [
+        {
+          "name": "Get All Leave Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/leave-requests",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "leave-requests"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "disabled": true
+                },
+                {
+                  "key": "user_id",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Lihat semua pengajuan cuti (filter: status, user_id)"
+          }
+        },
+        {
+          "name": "Approve Leave Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Disetujui, semoga liburannya menyenangkan\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/leave-requests/{{REQUEST_ID}}/approve",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "leave-requests", "{{REQUEST_ID}}", "approve"]
+            },
+            "description": "Setujui pengajuan cuti (Admin Only)"
+          }
+        },
+        {
+          "name": "Reject Leave Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Tidak dapat disetujui karena deadline project yang sama\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/leave-requests/{{REQUEST_ID}}/reject",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "leave-requests", "{{REQUEST_ID}}", "reject"]
+            },
+            "description": "Tolak pengajuan cuti dengan alasan (Admin Only)"
+          }
+        }
+      ]
+    }
+  ]
+}

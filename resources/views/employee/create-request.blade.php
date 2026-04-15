@@ -155,7 +155,11 @@
                         
                         <div class="progress mb-3" style="height: 25px;">
                             @php
-                                $percentage = ($currentBalance->used_days / $currentBalance->total_days) * 100;
+                                $percentage = 0;
+                                if ($currentBalance->total_days && $currentBalance->total_days > 0) {
+                                    $percentage = ($currentBalance->used_days / $currentBalance->total_days) * 100;
+                                    $percentage = min($percentage, 100); // Batasi maksimal 100%
+                                }
                             @endphp
                             <div class="progress-bar bg-danger" 
                                  role="progressbar" 

@@ -550,12 +550,12 @@
             const balanceResponse = await apiRequest('/api/leave-balance');
             if (balanceResponse.data) {
                 const balance = balanceResponse.data;
-                const available = Math.max(0, balance.total_days - balance.used_days);
-                const percentage = ((available / balance.total_days) * 100).toFixed(0);
+                const available = balance.remaining_quota || Math.max(0, balance.total_quota - balance.used_quota);
+                const percentage = ((balance.used_quota / balance.total_quota) * 100).toFixed(0);
 
                 document.getElementById('leave-balance-display').textContent = available + ' hari';
                 document.getElementById('balance-available').textContent = available + ' hari';
-                document.getElementById('balance-used').textContent = balance.used_days + ' hari';
+                document.getElementById('balance-used').textContent = balance.used_quota + ' hari';
                 document.getElementById('balance-percentage').textContent = percentage + '%';
                 document.getElementById('balance-progress').style.width = percentage + '%';
                 document.getElementById('balance-progress').setAttribute('aria-valuenow', percentage);

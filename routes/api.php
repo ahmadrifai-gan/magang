@@ -18,6 +18,11 @@ use App\Http\Controllers\Api\LeaveRequestController;
 
 // Authentication Routes (No auth required)
 Route::prefix('auth')->group(function () {
+    // CSRF Cookie endpoint
+    Route::get('csrf-cookie', function () {
+        return response()->json(['message' => 'CSRF cookie set']);
+    });
+    
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
     
