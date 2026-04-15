@@ -39,6 +39,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+            
+            // Generate API token for dashboard
+            $user = Auth::user();
+            $token = $user->createToken('auth_token')->plainTextToken;
+            
+            // Store token in session (persistent, not flash)
+            $request->session()->put('api_token', $token);
 
             return redirect()
                 ->intended(route('dashboard'))
@@ -107,6 +114,12 @@ class AuthController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
+            // Generate API token for dashboard
+            $token = $user->createToken('auth_token')->plainTextToken;
+            
+            // Store token in session (persistent, not flash)
+            $request->session()->put('api_token', $token);
+
             return redirect()
                 ->route('dashboard')
                 ->with('success', 'Akun berhasil dibuat! Selamat datang di Leave Management System.');
@@ -122,11 +135,15 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        // Remove token from session
+        $request->session()->forget('api_token');
+        
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect('/')
-            ->with('success', 'Logout berhasil.');
+            ->with('success', 'Logout berhasil.')
+            ->with('clear_token', true);
     }
 }

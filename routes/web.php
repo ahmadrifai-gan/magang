@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +45,20 @@ Route::middleware('auth')->group(function () {
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Admin Routes
+    Route::prefix('admin')->group(function () {
+        Route::get('/pending-approvals', [AdminController::class, 'pendingApprovals'])->name('admin.pending-approvals');
+        Route::get('/all-requests', [AdminController::class, 'allRequests'])->name('admin.all-requests');
+        Route::get('/view-request/{leaveRequest}', [AdminController::class, 'viewRequest'])->name('admin.view-request');
+    });
+
+    // Employee Routes
+    Route::prefix('employee')->group(function () {
+        Route::get('/my-requests', [EmployeeController::class, 'myRequests'])->name('employee.my-requests');
+        Route::get('/create-request', [EmployeeController::class, 'createRequest'])->name('employee.create-request');
+        Route::post('/store-request', [EmployeeController::class, 'storeRequest'])->name('employee.store-request');
+        Route::get('/view-request/{leaveRequest}', [EmployeeController::class, 'viewRequest'])->name('employee.view-request');
+        Route::delete('/cancel-request/{leaveRequest}', [EmployeeController::class, 'cancelRequest'])->name('employee.cancel-request');
+    });
 });

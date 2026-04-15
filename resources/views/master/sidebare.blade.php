@@ -31,21 +31,15 @@
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="menu-item" data-action="load-requests">
+                        <a href="{{ route('employee.my-requests') }}" class="menu-item {{ Route::current()->getName() === 'employee.my-requests' ? 'active' : '' }}">
                             <i class="fas fa-file-alt"></i>
                             <span>Pengajuan Saya</span>
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="menu-item" data-action="load-form">
+                        <a href="{{ route('employee.create-request') }}" class="menu-item {{ Route::current()->getName() === 'employee.create-request' ? 'active' : '' }}">
                             <i class="fas fa-plus-circle"></i>
                             <span>Ajukan Cuti</span>
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="menu-item" data-action="load-balance">
-                            <i class="fas fa-calendar-day"></i>
-                            <span>Sisa Cuti</span>
                         </a>
                     </li>
                 </ul>
@@ -64,14 +58,14 @@
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="menu-item" data-action="load-pending">
+                        <a href="{{ route('admin.pending-approvals') }}" class="menu-item {{ Route::current()->getName() === 'admin.pending-approvals' ? 'active' : '' }}">
                             <i class="fas fa-hourglass-end"></i>
                             <span>Persetujuan Pending</span>
-                            <span class="badge bg-warning rounded-pill ms-auto" id="pending-badge" style="display: none;"></span>
+                            <span class="badge bg-danger rounded-pill ms-auto" id="pending-badge" style="display: none;"></span>
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="menu-item" data-action="load-all-requests">
+                        <a href="{{ route('admin.all-requests') }}" class="menu-item {{ Route::current()->getName() === 'admin.all-requests' ? 'active' : '' }}">
                             <i class="fas fa-list"></i>
                             <span>Semua Pengajuan</span>
                         </a>

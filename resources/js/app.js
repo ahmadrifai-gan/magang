@@ -65,22 +65,38 @@ window.apiRequest = async function(url, options = {}) {
     const token = localStorage.getItem('api_token');
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
+    } else {
+        console.warn('⚠️ No token found in localStorage');
     }
 
-    const response = await fetch(url, {
-        ...options,
-        headers
-    });
+    try {
+        const response = await fetch(url, {
+            ...options,
+            headers
+        });
 
-    if (!response.ok) {
-        if (response.status === 401) {
-            localStorage.removeItem('api_token');
-            window.location.href = '/login';
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error(`❌ API Error ${response.status}:`, {
+                url,
+                status: response.status,
+                statusText: response.statusText,
+                data: errorData
+            });
+
+            if (response.status === 401) {
+                localStorage.removeItem('api_token');
+                window.location.href = '/login';
+            }
+            throw new Error(`API Error: ${response.status} - ${errorData.message || response.statusText}`);
         }
-        throw new Error(`API Error: ${response.status}`);
-    }
 
-    return await response.json();
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('❌ API Request Failed:', error.message);
+        throw error;
+    }
 };
 
 // Logger

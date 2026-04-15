@@ -312,6 +312,12 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
+            // Clean up token from localStorage if logout was executed
+            @if(session('clear_token'))
+                localStorage.removeItem('api_token');
+                console.log('✅ API Token dihapus dari localStorage (logout)');
+            @endif
+            
             // Global function untuk menampilkan toast
             function showToast(message, type = 'info') {
                 const container = document.getElementById('toastContainer');

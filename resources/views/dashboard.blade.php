@@ -511,6 +511,15 @@
 <script>
     // Load dashboard data when page loads
     document.addEventListener('DOMContentLoaded', function() {
+        // Debug: Check if token exists
+        const token = localStorage.getItem('api_token');
+        console.log('📋 Dashboard Load - Token Status:', token ? '✅ Ada' : '❌ Tidak ada');
+        if (token) {
+            console.log('Token Preview:', token.substring(0, 30) + '...');
+        } else {
+            console.warn('⚠️ Token tidak ditemukan! Pastikan Anda sudah login.');
+        }
+        
         loadDashboardData();
         
         // Setup form submission for leave request

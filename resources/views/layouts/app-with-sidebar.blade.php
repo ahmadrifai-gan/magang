@@ -185,6 +185,22 @@
 
     <!-- Global JavaScript -->
     <script>
+        // Get API token from session (now persistent, not flash)
+        const sessionToken = '{{ session('api_token', '') }}';
+        
+        // Debug logging
+        console.log('🔍 Session Token Check:');
+        console.log('Token exists:', sessionToken.length > 0 ? '✅ Ya' : '❌ Tidak');
+        
+        if (sessionToken && sessionToken.length > 0) {
+            // Store token to localStorage
+            localStorage.setItem('api_token', sessionToken);
+            console.log('✅ API Token berhasil disimpan ke localStorage');
+            console.log('Token preview:', sessionToken.substring(0, 40) + '...');
+        } else {
+            console.warn('⚠️ Session token kosong! Pastikan Anda sudah login dengan benar.');
+        }
+
         // Get API token from localStorage
         const apiToken = localStorage.getItem('api_token');
 
