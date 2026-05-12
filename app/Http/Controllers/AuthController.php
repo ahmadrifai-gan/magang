@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+ use Laravel\Socialite\Facades\Socialite;
+use Exception;
 
 class AuthController extends Controller
 {
@@ -127,6 +129,73 @@ class AuthController extends Controller
             return back()
                 ->withInput($request->only('name', 'email', 'role'))
                 ->withErrors(['error' => 'Terjadi kesalahan saat membuat akun. Silakan coba lagi.']);
+        }
+    }
+
+    /**
+     * Redirect user to Google OAuth
+     */
+    public function googleRedirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Handle Google OAuth callback
+     */
+    public function googleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+            
+            // Check if user exists, if not create them
+            $user = User::where('email', $googleUser->getEmail())->first();
+            
+            if ($user) {
+                Auth::login($user);
+            } else {
+                // Create new user from Google account
+                $user = User::create([
+                    'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                    'password' => Hash::make(uniqid()), // Generate random password since OAuth doesn't use password
+                    'role' => 'employee', // Default role for Google OAuth signup
+                    'email_verified_at' => now(),
+                ]);
+
+                // Create leave balance for the new user
+                $user->leaveBalances()->create([
+                    'year' => now()->year,
+                    'total_quota' => 12,
+                    'used_quota' => 0,
+                    'remaining_quota' => 12,
+                ]);
+
+                Auth::login($user);
+            }
+
+            // Regenerate session
+            request()->session()->regenerate();
+
+            // Generate API token for dashboard
+            $token = $user->createToken('auth_token')->plainTextToken;
+            
+            // Store token in session
+            request()->session()->put('api_token', $token);
+
+            return redirect()
+                ->route('dashboard')
+                ->with('success', 'Login dengan Google berhasil! Selamat datang.');
+        } catch (Exception $e) {
+            \Log::error('Google OAuth Error: ' . $e->getMessage(), [
+                'exception' => $e,
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+            
+            return redirect()
+                ->route('login')
+                ->withErrors(['error' => 'Terjadi kesalahan saat login dengan Google. Silakan coba lagi.']);
         }
     }
 

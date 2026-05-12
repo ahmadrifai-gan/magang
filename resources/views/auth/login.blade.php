@@ -109,14 +109,10 @@
                             <small>atau</small>
                         </div>
 
-                        <!-- Demo Credentials Info -->
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                            <small style="color: #666;">
-                                <strong>Demo Account:</strong><br>
-                                📧 <code>employee1@example.com</code><br>
-                                🔑 <code>password</code>
-                            </small>
-                        </div>
+                        <!-- Google OAuth Login Button -->
+                        <a href="{{ route('oauth.google.redirect') }}" class="btn btn-outline-primary w-100" style="border-color: #4285F4; color: #4285F4; font-weight: 500; padding: 10px; border-radius: 6px; transition: all 0.3s ease;">
+                            <i class="fab fa-google" style="margin-right: 8px;"></i> Login dengan Google
+                        </a>
 
                         <!-- Footer -->
                         <div class="auth-footer">

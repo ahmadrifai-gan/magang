@@ -16,9 +16,9 @@ use App\Http\Controllers\EmployeeController;
 |
 */
 
-// Home Page
+// Home Page - Redirect to Login
 Route::get('/', function () {
-    return view('index');
+    return redirect('/login');
 })->name('home');
 
 // Authentication Routes
@@ -34,7 +34,13 @@ Route::middleware('guest')->group(function () {
     
     // Handle Register Submission
     Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+
+    // Google OAuth Redirect
+    Route::get('/oauth/google/redirect', [AuthController::class, 'googleRedirect'])->name('oauth.google.redirect');
 });
+
+// Google OAuth Callback
+Route::get('/oauth/google/callback', [AuthController::class, 'googleCallback'])->name('oauth.google.callback');
 
 // Protected Routes (Require Authentication)
 Route::middleware('auth')->group(function () {
