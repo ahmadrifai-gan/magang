@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -107,5 +108,67 @@ class AuthController extends Controller
             'user' => new UserResource($user),
             'token' => $token,
         ], 200);
+    }
+
+    /**
+     * Login user with Google OAuth token (API)
+     */
+    public function googleLogin(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'access_token' => 'required|string',
+        ]);
+
+        try {
+            $googleUser = Socialite::driver('google')
+                ->stateless()
+                ->userFromToken($validated['access_token']);
+
+            $email = $googleUser->getEmail();
+            if (!$email) {
+                return response()->json([
+                    'message' => 'Google account tidak memiliki email.',
+                ], 422);
+            }
+
+            $user = User::where('email', $email)->first();
+
+            if (!$user) {
+                $user = User::create([
+                    'name' => $googleUser->getName() ?: $email,
+                    'email' => $email,
+                    'password' => Hash::make(uniqid('google_', true)),
+                    'role' => 'employee',
+                    'oauth_id' => $googleUser->getId(),
+                    'oauth_provider' => 'google',
+                    'email_verified_at' => now(),
+                ]);
+
+                $user->leaveBalances()->create([
+                    'year' => now()->year,
+                    'total_quota' => 12,
+                    'used_quota' => 0,
+                    'remaining_quota' => 12,
+                ]);
+            } else {
+                $user->update([
+                    'oauth_id' => $user->oauth_id ?: $googleUser->getId(),
+                    'oauth_provider' => $user->oauth_provider ?: 'google',
+                ]);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Login dengan Google berhasil',
+                'user' => new UserResource($user),
+                'token' => $token,
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Login Google gagal',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
     }
 }
