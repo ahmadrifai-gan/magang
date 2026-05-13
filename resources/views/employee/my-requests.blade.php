@@ -10,7 +10,7 @@
             <h1 class="display-6 fw-bold">
                 <i class="fas fa-file-alt text-primary"></i> Pengajuan Saya
             </h1>
-            <p class="text-muted">Lihat dan kelola pengajuan cuti Anda</p>
+            <p class="text-muted">Lihat dan kelola pengajuan setiap cuti Anda</p>
         </div>
         <div class="col-md-4 text-md-end">
             <a href="{{ route('employee.create-request') }}" class="btn btn-primary btn-lg">
