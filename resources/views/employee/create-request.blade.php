@@ -102,7 +102,7 @@
                         <!-- Lampiran -->
                         <div class="mb-4">
                             <label for="attachment" class="form-label">
-                                <i class="fas fa-paperclip"></i> Lampiran Berkas (Opsional)
+                                <i class="fas fa-paperclip"></i> Lampiran Berkas (Wajib)
                             </label>
                             <div class="input-group input-group-lg">
                                 <input type="file" 
